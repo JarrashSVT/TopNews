@@ -11,32 +11,18 @@ import org.json.JSONObject;
  * Created by mahmoud on 11/18/17.
  */
 
-public class FetchHeadline extends AsyncTask<String, Void, String>
+public class Headlines extends AsyncTask<String ,Void, String>
 {
-    private static final String  LOG_TAG = FetchHeadline.class.getSimpleName();
+    private static final String  LOG_TAG = Headlines.class.getSimpleName();
     private Headline[] headlines;
     public AsyncResponse delegate = null;
-
-    public void setHeadlines(Headline[] headlines) {
-        Log.d(LOG_TAG, headlines[0].getTitle());
-        this.headlines = headlines;
-    }
-
-    public Headline[] getHeadlines()
-    {
-        return headlines;
-    }
 
     @Override
     protected void onPostExecute(String s) {
         super.onPostExecute(s);
 
-      headlines =  getHeadlinesArr(s);
-      delegate.processFinish(headlines);
-      /*for(int i = 0 ; i < 5 ; i++)
-      {
-         Log.d(LOG_TAG, headlines[i].getDescription());
-      }*/
+        headlines =  getHeadlinesArr(s);
+        delegate.processFinish(headlines);
 
     }
 

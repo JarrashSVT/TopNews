@@ -17,13 +17,13 @@ import java.net.URL;
 public class NetworkUtils
 {
     private static final String LOG_TAG = NetworkUtils.class.getSimpleName();
-    private static final String API_URL = "https://newsapi.org/v1/articles";
-    private static final String SOURCE = "source";
-    private static final String SORT_BY = "sortBy";
+    private static final String API_URL = "https://newsapi.org/v2/top-headlines?";
+    private static final String SOURCE = "sources";
+    //private static final String SORT_BY = "sortBy";
     private static final String KEY = "apiKey";
 
 
-    static String getHeadlines(String source, String sortBy)
+    static String getHeadlines(String source)
     {
         String headlineJSON = null;
         HttpURLConnection urlConnection = null;
@@ -35,7 +35,6 @@ public class NetworkUtils
         {
             Uri apiUri = Uri.parse(API_URL).buildUpon()
                     .appendQueryParameter(SOURCE, source)
-                    .appendQueryParameter(SORT_BY, sortBy)
                     .appendQueryParameter(KEY, "9de224d271f3467280686c9a54791815")
                     .build();
 

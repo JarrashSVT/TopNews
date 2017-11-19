@@ -38,6 +38,7 @@ public class NetworkUtils
                     .appendQueryParameter(KEY, "9de224d271f3467280686c9a54791815")
                     .build();
 
+            Log.d(LOG_TAG, "getHeadlines: " + apiUri.toString());
             URL requestUrl = new URL(apiUri.toString());
 
             urlConnection = (HttpURLConnection) requestUrl.openConnection();

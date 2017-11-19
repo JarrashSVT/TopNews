@@ -1,8 +1,9 @@
 <resources>
     <string name="app_name">Top News</string>
     <string-array name="sources">
+        <item>ABC</item>
         <item>BBC</item>
-        <item>CNN</item>
+        <item>CBS</item>
     </string-array>
     <string-array name="sortByMethods">
         <item>Top</item>

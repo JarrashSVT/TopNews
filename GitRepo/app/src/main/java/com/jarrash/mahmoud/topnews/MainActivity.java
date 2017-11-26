@@ -14,6 +14,8 @@ import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+import java.util.HashMap;
+
 public class MainActivity extends AppCompatActivity implements AsyncResponse {
 
     private static final String  LOG_TAG = MainActivity.class.getSimpleName();
@@ -38,6 +40,12 @@ public class MainActivity extends AppCompatActivity implements AsyncResponse {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        HashMap soureces = new HashMap();
+        soureces.put("bbc","bbc-news");
+        soureces.put("abc", "abc-news");
+        soureces.put("cbs", "cbs-news");
+        soureces.put("argaam", "argaam");
+        soureces.put("bloomberg","bloomberg");
 
         Intent intent = getIntent();
         source = intent.getStringExtra("source");
@@ -48,7 +56,7 @@ public class MainActivity extends AppCompatActivity implements AsyncResponse {
             int index = sourcesSpinner.getSelectedItemPosition();
             Log.i(LOG_TAG, "onCreate -> index=" + index);
             //source = sources[index].toLowerCase();
-            source = String.valueOf(sourcesSpinner.getSelectedItem());
+            source = String.valueOf(sourcesSpinner.getSelectedItem()).toLowerCase();
             Log.i(LOG_TAG, "onCreate -> source=" + source);
             // final Headline[] headlines = null;
         }
@@ -62,7 +70,7 @@ public class MainActivity extends AppCompatActivity implements AsyncResponse {
             Log.i(LOG_TAG, "Connected to Internet");
             h = new Headlines();
             h.delegate = this;
-            h.execute(source + "-news");
+            h.execute(soureces.get(source).toString());
 
         }
         else
@@ -75,7 +83,7 @@ public class MainActivity extends AppCompatActivity implements AsyncResponse {
                 public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                     Log.i(LOG_TAG, "FUNCTION:onItemSelected -> NOT Connected to Internet");
                     displayToast("Make sure that your are connected to the internet");
-                    
+
                     if(isConnected())
                     {
                         Log.i(LOG_TAG, "FUNCTION:onItemSelected -> Internet connection is restored :) ");
@@ -100,14 +108,6 @@ public class MainActivity extends AppCompatActivity implements AsyncResponse {
     public void processFinish(final Headline[] headlines)
     {
         int i = 0;
-       /* for(i = 0 ; i < 10 ; i++)
-        {
-            if(headlines[i] != null)
-            {
-                Log.d(LOG_TAG, "FUNCTION:processFinish: Headline (" + i + ")"+ headlines[i].getDescription());
-            }
-        }*/
-
         while (headlines[i] != null && i < headlines.length)
         {
             Log.d(LOG_TAG, "FUNCTION:processFinish: Headline (" + i + "): "+ headlines[i].getDescription());

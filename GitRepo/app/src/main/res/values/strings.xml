@@ -4,6 +4,8 @@
         <item>ABC</item>
         <item>BBC</item>
         <item>CBS</item>
+        <item>Argaam</item>
+        <item>Bloomberg</item>
     </string-array>
     <string-array name="sortByMethods">
         <item>Top</item>

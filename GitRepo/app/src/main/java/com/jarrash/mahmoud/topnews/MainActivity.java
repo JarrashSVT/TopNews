@@ -1,6 +1,9 @@
 package com.jarrash.mahmoud.topnews;
 
+import android.content.Context;
 import android.content.Intent;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -9,6 +12,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Spinner;
+import android.widget.Toast;
 
 public class MainActivity extends AppCompatActivity implements AsyncResponse {
 
@@ -34,14 +38,13 @@ public class MainActivity extends AppCompatActivity implements AsyncResponse {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+
         Intent intent = getIntent();
         source = intent.getStringExtra("source");
         Log.i(LOG_TAG, "onCreate -> intent-> source=" + source);
         sourcesSpinner = (Spinner) findViewById(R.id.sourceSpinner);
-        if(source == null) {
-
-
-
+        if(source == null)
+        {
             int index = sourcesSpinner.getSelectedItemPosition();
             Log.i(LOG_TAG, "onCreate -> index=" + index);
             //source = sources[index].toLowerCase();
@@ -54,10 +57,41 @@ public class MainActivity extends AppCompatActivity implements AsyncResponse {
             sourcesSpinner.setSelection(intent.getIntExtra("index", -1));
         }
 
+        if(isConnected())
+        {
+            Log.i(LOG_TAG, "Connected to Internet");
+            h = new Headlines();
+            h.delegate = this;
+            h.execute(source + "-news");
 
-        h = new Headlines();
-        h.delegate = this;
-        h.execute(source + "-news");
+        }
+        else
+        {
+            Log.i(LOG_TAG, "NOT Connected to Internet");
+            displayToast("Make sure that your are connected to the internet");
+
+            sourcesSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                @Override
+                public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                    Log.i(LOG_TAG, "FUNCTION:onItemSelected -> NOT Connected to Internet");
+                    displayToast("Make sure that your are connected to the internet");
+                    
+                    if(isConnected())
+                    {
+                        Log.i(LOG_TAG, "FUNCTION:onItemSelected -> Internet connection is restored :) ");
+                        recreate();
+                    }
+                }
+
+                @Override
+                public void onNothingSelected(AdapterView<?> parent) {
+
+                }
+            });
+
+        }
+
+
 
 
     }
@@ -141,5 +175,26 @@ public class MainActivity extends AppCompatActivity implements AsyncResponse {
         }
 
         return titles;
+    }
+
+    public boolean isConnected()
+    {
+        ConnectivityManager cm =
+                (ConnectivityManager)getBaseContext().getSystemService(Context.CONNECTIVITY_SERVICE);
+
+        NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
+        boolean isConnected = activeNetwork != null && activeNetwork.isConnectedOrConnecting();
+        return isConnected;
+    }
+
+    public void displayToast(String msg)
+    {
+        //toast
+        Context context = getApplicationContext();
+        CharSequence text = msg ;
+        int duration = Toast.LENGTH_SHORT;
+
+        Toast toast = Toast.makeText(context, text, duration);
+        toast.show();
     }
 }

@@ -47,7 +47,7 @@ public class HeadlineActivity extends AppCompatActivity {
         authorTxt.setText("By " + author);
         descriptionTxt.setText(description);
         urlTxt.setText(url);
-        publishedAtTxt.setText(publishedAt);
+        publishedAtTxt.setText("Published At: "  + publishedAt);
 
         if(urlToImage.equals("null")) {
             Log.i(LOG_TAG, "FUNCTION: onCreate -> urlToImage is  null");

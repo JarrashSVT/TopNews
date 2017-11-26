@@ -13,6 +13,14 @@ import android.widget.Spinner;
 public class MainActivity extends AppCompatActivity implements AsyncResponse {
 
     private static final String  LOG_TAG = MainActivity.class.getSimpleName();
+    //Intent variables
+    public static final String TITLE = "TITLE";
+    public static final String AUTHOR = "AUTHOR";
+    public static final String DESC = "DESC";
+    public static final String URL = "URL";
+    public static final String URLTOIMAGE = "URLTOIMAGE";
+    public static final String PUBLISHEDAT = "PUBLISHEDAT";
+
     private Spinner sourcesSpinner;
     ListView headlinesListView;
     private String[] sources;
@@ -55,14 +63,24 @@ public class MainActivity extends AppCompatActivity implements AsyncResponse {
     }
 
     @Override
-    public void processFinish(Headline[] headlines)
+    public void processFinish(final Headline[] headlines)
     {
-        for(int i = 0 ; i < 10 ; i++)
+        int i = 0;
+       /* for(i = 0 ; i < 10 ; i++)
         {
-            Log.d(LOG_TAG, "processFinish: " + headlines[i].getDescription());
+            if(headlines[i] != null)
+            {
+                Log.d(LOG_TAG, "FUNCTION:processFinish: Headline (" + i + ")"+ headlines[i].getDescription());
+            }
+        }*/
+
+        while (headlines[i] != null && i < headlines.length)
+        {
+            Log.d(LOG_TAG, "FUNCTION:processFinish: Headline (" + i + "): "+ headlines[i].getDescription());
+            i++;
         }
 
-        titles =  getTitles(headlines);
+        titles =  getTitles(headlines, i);
         ArrayAdapter arrayAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1,titles);
         headlinesListView = (ListView) findViewById(R.id.headlinesList);
 
@@ -74,7 +92,7 @@ public class MainActivity extends AppCompatActivity implements AsyncResponse {
             {
                 sources = getResources().getStringArray(R.array.sources);
                 Intent intent = new Intent(getBaseContext(), MainActivity.class);
-                Log.i(LOG_TAG, "processFinish -> onItemSelected: " + sources[position].toLowerCase());
+                Log.i(LOG_TAG, "FUNCTION:processFinish -> onItemSelected: " + sources[position].toLowerCase());
                 intent.putExtra("source",sources[position].toLowerCase());
                 intent.putExtra("index", position);
                 startActivity(intent);
@@ -89,19 +107,37 @@ public class MainActivity extends AppCompatActivity implements AsyncResponse {
             }
         });
 
+        headlinesListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Intent intent = new Intent(getBaseContext(), HeadlineActivity.class);
+                intent.putExtra("position", position);
+                intent.putExtra(TITLE, headlines[position].getTitle());
+                intent.putExtra(AUTHOR, headlines[position].getAuthor());
+                intent.putExtra(DESC, headlines[position].getDescription());
+                intent.putExtra(URL, headlines[position].getUrl());
+                intent.putExtra(URLTOIMAGE, headlines[position].getUrlToImage());
+                intent.putExtra(PUBLISHEDAT, headlines[position].getPublishedAt());
+                startActivity(intent);
+            }
+        });
+
 
 
     }
 
 
-    public String[] getTitles(Headline[] headlines)
+    public String[] getTitles(Headline[] headlines, int numOfHeadlines)
     {
         Log.d(LOG_TAG, "getTitles ");
-        String[] titles = new String[10];
-        for(int i = 0 ; i < 10 ; i++)
+        Log.d(LOG_TAG, "FUNCTION:getTitles -> numOfHeadlines = " + numOfHeadlines);
+        String[] titles = new String[numOfHeadlines];
+        for(int i = 0 ; i < numOfHeadlines ; i++)
         {
-            Log.d(LOG_TAG, "Title " + i +": "+ headlines[i].getTitle());
+
+            Log.d(LOG_TAG, "FUNCTION:getTitles -> Title " + i + ": " + headlines[i].getTitle());
             titles[i] = headlines[i].getTitle();
+
         }
 
         return titles;

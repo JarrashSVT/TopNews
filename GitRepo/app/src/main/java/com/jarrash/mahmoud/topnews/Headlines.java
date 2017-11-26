@@ -33,12 +33,13 @@ public class Headlines extends AsyncTask<String ,Void, String>
 
     public Headline[] getHeadlinesArr(String json)
     {
-        Headline[] headlines = new Headline[10];
+        Headline[] headlines = new Headline[0];
 
         try
         {
             JSONObject jsonObject = new JSONObject(json);
             JSONArray jsonArray = jsonObject.getJSONArray("articles");
+            headlines = new Headline[jsonArray.length()+1];
 
             for(int i = 0 ; i < jsonArray.length() ; i++)
             {
